@@ -21,4 +21,20 @@ class PersonService {
 
     return null;
   }
+
+  Future<PersonModel?> getOne(String id) async {
+    try {
+      final http.Response response =
+          await http.get(Uri.parse('$_url/persons/$id'));
+
+      switch (response.statusCode) {
+        case 200:
+          return PersonModel.fromJson(jsonDecode(response.body)['data']);
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return null;
+  }
 }
