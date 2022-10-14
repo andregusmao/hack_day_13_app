@@ -26,4 +26,9 @@ class PersonModel {
         'surname': surname,
         'email': email,
       };
+
+  @override
+  String toString() {
+    return '$firstname $surname';
+  }
 }

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:person_app/bloc/person_bloc.dart';
+import 'package:person_app/views/person_add_view.dart';
+import 'package:person_app/views/person_edit_view.dart';
 
 class PersonView extends StatelessWidget {
   const PersonView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    PersonBloc _bloc = BlocProvider.of<PersonBloc>(context);
+    PersonBloc bloc = BlocProvider.of<PersonBloc>(context);
 
-    _bloc.add(LoadEvent());
+    bloc.add(LoadEvent());
 
     return Scaffold(
       appBar: AppBar(
@@ -18,7 +20,7 @@ class PersonView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
-              onPressed: () => _bloc.add(LoadEvent()),
+              onPressed: () => bloc.add(LoadEvent()),
               icon: const Icon(
                 Icons.refresh,
                 color: Colors.white,
@@ -30,7 +32,7 @@ class PersonView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: IconButton(
-              onPressed: () => _bloc.add(AddEvent()),
+              onPressed: () => bloc.add(AddEvent()),
               icon: const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -88,16 +90,47 @@ class PersonView extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   title: Text(
-                                      '${state.persons?[index].firstname ?? ''} ${state.persons?[index].surname ?? ''}'),
+                                      state.persons?[index].toString() ?? ''),
+                                  // '${state.persons?[index].firstname ?? ''} ${state.persons?[index].surname ?? ''}'),
                                   subtitle:
                                       Text(state.persons?[index].email ?? ''),
                                   trailing: IconButton(
-                                    onPressed: () => print('delete'),
+                                    onPressed: () {
+                                      Future.delayed(Duration.zero, () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text('Excluir Pessoa'),
+                                            content: const Text(
+                                                'Deseja realmente excluir?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  String id = state
+                                                          .persons?[index].id ??
+                                                      '';
+                                                  if (id.isNotEmpty) {
+                                                    bloc.add(DeleteEvent(id));
+                                                  }
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Sim'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text('Não'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                    },
                                     icon: const Icon(Icons.delete),
                                     iconSize: 24,
                                     splashRadius: 24,
                                   ),
-                                  onTap: () => _bloc.add(EditEvent(
+                                  onTap: () => bloc.add(EditEvent(
                                       state.persons?[index].id ?? '')),
                                 );
                               },
@@ -105,16 +138,16 @@ class PersonView extends StatelessWidget {
                             ),
                           )
                         : state is AddingState
-                            ? const Expanded(
-                                child: Center(
-                                  child: Text('Inserindo'),
-                                ),
+                            ? PersonAddView(
+                                onSave: (person) => bloc.add(SaveEvent(person)),
+                                onBack: () => bloc.add(LoadEvent()),
                               )
                             : state is EditingState
-                                ? const Expanded(
-                                    child: Center(
-                                      child: Text('Editando'),
-                                    ),
+                                ? PersonEditView(
+                                    person: state.person,
+                                    onSave: (person) =>
+                                        bloc.add(SaveEvent(person)),
+                                    onBack: () => bloc.add(LoadEvent()),
                                   )
                                 : Container(),
               ],

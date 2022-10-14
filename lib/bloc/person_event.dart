@@ -12,3 +12,15 @@ class EditEvent extends PersonEvent {
 
   EditEvent(this.id);
 }
+
+class SaveEvent extends PersonEvent {
+  final PersonModel person;
+
+  SaveEvent(this.person);
+}
+
+class DeleteEvent extends PersonEvent {
+  final String id;
+
+  DeleteEvent(this.id);
+}
