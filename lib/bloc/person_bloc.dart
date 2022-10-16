@@ -1,5 +1,6 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:bloc/bloc.dart';
-import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:person_app/models/person_model.dart';
 import 'package:person_app/services/person_service.dart';
@@ -14,7 +15,6 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
     on<LoadEvent>((event, emit) async {
       emit(WaitingState());
       List<PersonModel>? persons = await _service.getAll();
-      await Future.delayed(const Duration(seconds: 3));
       if (persons == null) {
         emit(ErrorState());
       } else {
@@ -45,7 +45,6 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
         emit(ErrorState());
       } else {
         List<PersonModel>? persons = await _service.getAll();
-        await Future.delayed(const Duration(seconds: 3));
         if (persons == null) {
           emit(ErrorState());
         } else {
@@ -57,7 +56,6 @@ class PersonBloc extends Bloc<PersonEvent, PersonState> {
       emit(WaitingState());
       await _service.delete(event.id);
       List<PersonModel>? persons = await _service.getAll();
-      await Future.delayed(const Duration(seconds: 3));
       if (persons == null) {
         emit(ErrorState());
       } else {

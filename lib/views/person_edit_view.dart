@@ -3,12 +3,9 @@ import 'package:person_app/models/person_model.dart';
 
 class PersonEditView extends StatelessWidget {
   PersonEditView(
-      {super.key,
-      required this.onSave,
-      required this.onBack,
-      required this.person});
+      {super.key, required this.onSave, required this.onBack, this.person});
 
-  final PersonModel person;
+  final PersonModel? person;
   final Function(PersonModel person) onSave;
   final VoidCallback onBack;
 
@@ -20,19 +17,19 @@ class PersonEditView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _firstname.text = person.firstname;
-    _surname.text = person.surname;
-    _email.text = person.email;
+    _firstname.text = person?.firstname ?? '';
+    _surname.text = person?.surname ?? '';
+    _email.text = person?.email ?? '';
     return Form(
       child: Form(
         key: _key,
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Alterar Pessoa',
-                style: TextStyle(
+                person == null ? 'Nova Pessoa' : 'Alterar Pessoa',
+                style: const TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -83,13 +80,12 @@ class PersonEditView extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   if (_key.currentState!.validate()) {
-                    PersonModel model = PersonModel(
-                      id: person.id,
+                    onSave(PersonModel(
+                      id: person?.id,
                       firstname: _firstname.text,
                       surname: _surname.text,
                       email: _email.text,
-                    );
-                    onSave(model);
+                    ));
                   }
                 },
                 child: const Text('Salvar'),

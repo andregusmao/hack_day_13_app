@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:person_app/bloc/person_bloc.dart';
-import 'package:person_app/views/person_add_view.dart';
 import 'package:person_app/views/person_edit_view.dart';
 
 class PersonView extends StatelessWidget {
@@ -138,7 +137,7 @@ class PersonView extends StatelessWidget {
                             ),
                           )
                         : state is AddingState
-                            ? PersonAddView(
+                            ? PersonEditView(
                                 onSave: (person) => bloc.add(SaveEvent(person)),
                                 onBack: () => bloc.add(LoadEvent()),
                               )
