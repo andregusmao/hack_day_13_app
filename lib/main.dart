@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:person_app/bloc/person_bloc.dart';
+import 'package:person_app/bloc/person/person_bloc.dart';
 import 'package:person_app/views/person_view.dart';
 
 void main() {
@@ -13,8 +13,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PersonBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => PersonBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

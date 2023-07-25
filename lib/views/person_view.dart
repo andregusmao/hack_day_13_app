@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:person_app/bloc/person_bloc.dart';
+import 'package:person_app/bloc/person/events/person_add_event.dart';
+import 'package:person_app/bloc/person/events/person_delete_event.dart';
+import 'package:person_app/bloc/person/events/person_edit_event.dart';
+import 'package:person_app/bloc/person/events/person_load_event.dart';
+import 'package:person_app/bloc/person/events/person_save_event.dart';
+import 'package:person_app/bloc/person/person_bloc.dart';
+import 'package:person_app/bloc/person/states/person_adding_state.dart';
+import 'package:person_app/bloc/person/states/person_editing_state.dart';
+import 'package:person_app/bloc/person/states/person_error_state.dart';
+import 'package:person_app/bloc/person/states/person_loaded_state.dart';
+import 'package:person_app/bloc/person/states/person_waiting_state.dart';
 import 'package:person_app/views/person_edit_view.dart';
 
 class PersonView extends StatelessWidget {
@@ -67,9 +77,9 @@ class PersonView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 state is WaitingState
-                    ? Expanded(
+                    ? const Expanded(
                         child: Stack(
-                          children: const [
+                          children: [
                             LinearProgressIndicator(),
                             Center(
                               child: Text(
